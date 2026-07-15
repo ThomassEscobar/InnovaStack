@@ -9,57 +9,67 @@ spring:
     gateway:
       mvc:
         routes:
-
           # AUTENTICACION
           - id: servicio-autenticacion
-            uri: http://localhost:8080
+            uri: lb://servicio-autenticacion
             predicates:
               - Path=/autenticacion/**
 
           # CLIENTES
           - id: servicio-cliente
-            uri: http://localhost:8081
+            uri: lb://servicio-cliente
             predicates:
               - Path=/clientes/**
 
           # TICKETS
           - id: servicio-tickets
-            uri: http://localhost:8082
+            uri: lb://servicio-tickets
             predicates:
               - Path=/tickets/**
 
           # PROYECTOS
           - id: servicio-proyectos
-            uri: http://localhost:8083
+            uri: lb://servicio-proyectos
             predicates:
               - Path=/proyectos/**
 
           # REUNIONES
           - id: servicio-reuniones
-            uri: http://localhost:8084
+            uri: lb://servicio-reuniones
             predicates:
               - Path=/reuniones/**
 
           # FACTURACION
           - id: servicio-facturas
-            uri: http://localhost:8085
+            uri: lb://servicio-facturas
             predicates:
               - Path=/facturas/**
 
           # REPORTES
           - id: servicio-reportes
-            uri: http://localhost:8086
+            uri: lb://servicio-reportes
             predicates:
               - Path=/reportes/**
 
           # AUDITORIA
           - id: servicio-auditoria
-            uri: http://localhost:8087
+            uri: lb://servicio-auditoria
             predicates:
               - Path=/auditorias/**
 
           # NOTIFICACIONES
           - id: servicio-notificaciones
-            uri: http://localhost:8088
+            uri: lb://servicio-notificaciones
             predicates:
               - Path=/notificaciones/**
+
+  # Configuración de Eureka para el Gateway
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance-id:${random.value}}
