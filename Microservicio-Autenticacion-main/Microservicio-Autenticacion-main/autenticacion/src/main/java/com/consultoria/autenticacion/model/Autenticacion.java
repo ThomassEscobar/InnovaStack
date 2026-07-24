@@ -1,5 +1,13 @@
 package com.consultoria.autenticacion.model;
 
+import java.util.Collection;
+import java.util.Collections;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,24 +23,72 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="autenticaion")
-public class Autenticacion {
+@Table(name="autenticacion")
+public class Autenticacion implements UserDetails {
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @NotBlank
     private Long id;
-    @NotBlank
+
+    @NotBlank(message = "El nombre de usuario es obligatorio")
+    @Column(unique = true, nullable = false)
     private String username;
+
     @Email
     @NotBlank
+    @Column(unique = true, nullable = false)
     private String email;
+
     @NotBlank
+    private String password;
+
+    @NotBlank
+    @Column(unique = true, nullable = false)
     private String rut;
+
     @NotBlank
     private String rol;
-    @NotBlank
+
+    
     private String area;
+
+    private Boolean enabled = true;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + rol));
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+    
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
 
 
 }
